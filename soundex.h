@@ -22,12 +22,16 @@ class Soundex {
           {'r', "6"},
       };
 
-      auto it = encodings.find(letter);
+      auto it = encodings.find(lower(letter));
       return it == encodings.end() ? NotADigit : it->second;
     }
 
   private:
     const std::string NotADigit{"*"};
+
+    char lower(char c) const {
+      return std::tolower(static_cast<unsigned char>(c));
+    }
 
     std::string upperFront(const std::string& string) const {
       // the static_cast avoids potential problems when handling EOF
