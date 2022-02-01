@@ -23,11 +23,14 @@ class Soundex {
       };
 
       auto it = encodings.find(letter);
-      return it == encodings.end() ? "" : it->second;
+      return it == encodings.end() ? NotADigit : it->second;
     }
 
   private:
+    const std::string NotADigit{"*"};
+
     std::string upperFront(const std::string& string) const {
+      // the static_cast avoids potential problems when handling EOF
       return std::string(1, std::toupper(static_cast<unsigned char>(string.front())));
     }
 
@@ -40,7 +43,7 @@ class Soundex {
     }
 
     std::string lastDigit(const std::string& encoding) const {
-      if(encoding.empty()) return "";
+      if(encoding.empty()) return NotADigit;
       return std::string(1, encoding.back());
     }
 
@@ -49,8 +52,10 @@ class Soundex {
 
       for (auto letter : word) {
           if(isComplete(encoding)) break;
-          if(encodedDigit(letter) != lastDigit(encoding))
-            encoding += encodedDigit(letter);
+
+          auto digit = encodedDigit(letter);
+          if(digit!= NotADigit && digit != lastDigit(encoding))
+            encoding += digit;
       }
 
       return encoding;
