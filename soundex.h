@@ -51,18 +51,28 @@ class Soundex {
       return std::string(1, encoding.back());
     }
 
-    std::string encodedDigits(const std::string& word) const {
-      std::string encoding;
-
-      encoding += encodedDigit(word.front());
-
-      for (auto letter : tail(word)) {
-          if(isComplete(encoding)) break;
-
+    void encodeLetter(std::string& encoding, char letter) const {
           auto digit = encodedDigit(letter);
           if(digit!= NotADigit && digit != lastDigit(encoding))
             encoding += digit;
+    }
+
+    void encodeHead(std::string& encoding, const std::string& word) const {
+      encoding += encodedDigit(word.front());
+    }
+
+    void encodeTail(std::string& encoding, const std::string& word) const {
+      for (auto letter : tail(word)) {
+          if(!isComplete(encoding))
+              encodeLetter(encoding, letter);
       }
+    }
+
+    std::string encodedDigits(const std::string& word) const {
+      std::string encoding;
+
+      encodeHead(encoding, word);
+      encodeTail(encoding, word);
 
       return encoding;
     }
