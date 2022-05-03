@@ -1,6 +1,8 @@
 #include "gmock/gmock.h"
 #include "soundex.h"
 
+# Just a small test
+
 using namespace testing;
 
 class SoundexEncoding : public Test {
